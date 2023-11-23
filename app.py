@@ -5,6 +5,7 @@ import seaborn as sns
 import io
 import base64
 
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -17,22 +18,37 @@ def index():
     gender_recid = df[['sex', 'is_recid']]
 
     # 성별과 재범 발생 여부에 대한 교차표 생성
-    cross_table = pd.crosstab(gender_recid['sex'], gender_recid['is_recid'])
+    cross_table_gender = pd.crosstab(gender_recid['sex'], gender_recid['is_recid'])
 
-    # 교차표 시각화
+    # 교차표 시각화 - 성별 vs 재범 발생 여부
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cross_table, annot=True, cmap='coolwarm', fmt='d')
+    sns.heatmap(cross_table_gender, annot=True, cmap='coolwarm', fmt='d')
     plt.title('Gender vs Recidivism')
     plt.xlabel('Recidivism')
     plt.ylabel('Gender')
-
-    # 그래프 이미지를 HTML에 삽입
     img = io.BytesIO()
     plt.savefig(img, format='png')
     img.seek(0)
-    plot_url = base64.b64encode(img.getvalue()).decode()
+    gender_plot_url = base64.b64encode(img.getvalue()).decode()
 
-    return render_template('index.html', plot_url=plot_url)
+    # 나이와 재범 발생 여부 컬럼 선택
+    age_recid = df[['age', 'is_recid']]
+
+    # 나이와 재범 발생 여부에 대한 교차표 생성
+    cross_table_age = pd.crosstab(age_recid['age'], age_recid['is_recid'])
+
+    # 교차표 시각화 - 나이 vs 재범 발생 여부
+    plt.figure(figsize=(12, 6))
+    sns.heatmap(cross_table_age, cmap='coolwarm', annot=True, fmt='d')
+    plt.title('Age vs Recidivism')
+    plt.xlabel('Recidivism')
+    plt.ylabel('Age')
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    age_plot_url = base64.b64encode(img.getvalue()).decode()
+
+    return render_template('index.html', gender_plot_url=gender_plot_url, age_plot_url=age_plot_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
