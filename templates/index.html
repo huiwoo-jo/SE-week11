@@ -1,10 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gender vs Recidivism</title>
+    <title>Gender vs Recidivism & Age vs Recidivism</title>
+    <style>
+        /* 탭 디자인을 위한 CSS */
+        .tab {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gender vs Recidivism</h1>
-    <img src="data:image/png;base64,{{ plot_url }}" alt="Gender vs Recidivism">
+    <button class="tablinks" onclick="openTab(event, 'gender')">Gender vs Recidivism</button>
+    <button class="tablinks" onclick="openTab(event, 'age')">Age vs Recidivism</button>
+
+    <div id="gender" class="tab">
+        <h1>Gender vs Recidivism</h1>
+        <img src="data:image/png;base64,{{ gender_plot_url }}" alt="Gender vs Recidivism">
+    </div>
+
+    <div id="age" class="tab">
+        <h1>Age vs Recidivism</h1>
+        <img src="data:image/png;base64,{{ age_plot_url }}" alt="Age vs Recidivism">
+    </div>
+
+    <script>
+        /* 탭 전환을 위한 JavaScript */
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            document.getElementById(tabName).style.display = "block";
+        }
+    </script>
 </body>
 </html>
